@@ -1,82 +1,157 @@
+#include "keymap_swiss_de.h"
 #include <behaviors.dtsi>
 #include <dt-bindings/zmk/keys.h>
 #include <dt-bindings/zmk/bt.h>
 #include <dt-bindings/zmk/outputs.h>
 #include <dt-bindings/zmk/pointing.h>
 
-#define BASE 0
-#define NAV  1
-#define SYM  2
-#define ADJ  3
+#define DEFAULT 0
+#define MAC   1
+#define LOWER 2
+#define RAISE 3
+#define MC_RAISE 4
+#define OSL   5
+#define GAME  6
+#define HYP_MAC LC(LA(LGUI))
 
 / {
-    conditional_layers {
-        compatible = "zmk,conditional-layers";
-        tri_layer {
-            if-layers = <1 2>;
-            then-layer = <3>;
-        };
-    };
+  chosen {
+    zmk,matrix_transform = &default_transform;
+    //zmk,matrix_transform = &five_column_transform;
+  };
+};
 
-    keymap {
-        compatible = "zmk,keymap";
+&mt {
+    tapping-term-ms = <150>;
+};
 
-        base {
-            display-name = "BASE";
-            bindings = <
-                &kp TAB   &kp Q &kp W &kp E &kp R &kp T   &kp Y &kp U  &kp I     &kp O   &kp P    &kp BSPC
-                &kp LCTRL &kp A &kp S &kp D &kp F &kp G   &kp H &kp J  &kp K     &kp L   &kp SEMI &kp SQT
-                &kp LSHFT &kp Z &kp X &kp C &kp V &kp B   &kp N &kp M  &kp COMMA &kp DOT &kp FSLH &kp ESC
-                                &kp LGUI &mo 1 &kp SPACE   &kp RET &mo 2 &kp RALT
-            >;
-        };
-
-        nav {
-            display-name = "NAV";
-            bindings = <
-                &kp TAB     &kp N1          &kp N2       &kp N3       &kp N4       &kp N5         &kp N6   &kp N7   &kp N8 &kp N9    &kp N0 &kp BSPC
-                &bt BT_CLR  &bt BT_SEL 0    &bt BT_SEL 1 &bt BT_SEL 2 &bt BT_SEL 3 &bt BT_SEL 4   &kp LEFT &kp DOWN &kp UP &kp RIGHT &trans &trans
-                &kp LSHFT   &studio_unlock  &trans       &trans       &trans       &trans         &trans   &trans   &trans &trans    &trans &trans
-                                                &kp LGUI     &trans       &kp SPACE      &kp RET  &trans   &kp RALT
-            >;
-        };
-
-        sym {
-            display-name = "SYM";
-            bindings = <
-                &kp TAB   &kp EXCL &kp AT &kp HASH &kp DLLR &kp PRCNT   &kp CARET &kp AMPS  &kp KP_MULTIPLY &kp LPAR &kp RPAR &kp BSPC
-                &kp LCTRL &trans   &trans &trans   &trans   &trans      &kp MINUS &kp EQUAL &kp LBKT        &kp RBKT &kp BSLH &kp GRAVE
-                &kp LSHFT &trans   &trans &trans   &trans   &trans      &kp UNDER &kp PLUS  &kp LBRC        &kp RBRC &kp PIPE &kp TILDE
-                                          &kp LGUI &trans   &kp SPACE   &kp RET   &trans    &kp RALT
-            >;
+/ {
+        behaviors {
+          mo_sl: behavior_mo_sl {
+              compatible = "zmk,behavior-hold-tap";
+              label = "mo_sl";
+              #binding-cells = <2>;
+              flavor = "hold-preferred";
+              tapping-term-ms = <150>;
+              bindings = <&mo>, <&sl>;
+          };
+          kp_sl: behavior_kp_sl {
+              compatible = "zmk,behavior-hold-tap";
+              label = "kp_kp";
+              #binding-cells = <2>;
+              flavor = "hold-preferred";
+              tapping-term-ms = <150>;
+              bindings = <&kp>, <&sl>;
+          };
+          td0: td_alt_dance {
+              compatible = "zmk,behavior-tap-dance";
+              label = "ALTD";
+              #binding-cells = <0>;
+              tapping-term-ms = <150>;
+              bindings = <&kp LALT>, <&kp RALT>;
+          };
         };
 
-        adj {
-            display-name = "ADJ";
-            bindings = <
-                &mo TAB   &trans &kp F7 &kp F8 &kp F9 &kp F12   &kp C_VOL_DN &kp C_MUTE  &kp C_VOL_UP &trans &trans &kp BSPC
-                &kp LCTRL &trans &kp F4 &kp F5 &kp F6 &kp F11   &trans       &trans      &trans       &trans &trans &trans
-                &bt LSHFT &trans &kp F1 &kp F2 &kp F3 &kp F10   &trans       &trans      &trans       &trans &trans &trans
-                                   &kp LGUI &mo NAV &kp SPACE   &kp RET &mo 2 &kp RALT
-            >;
-        };
+        keymap {
+                compatible = "zmk,keymap";
 
-        mouse {
-            display-name = "MOU";
-            bindings = <
-                &trans &trans &trans &trans &trans &trans           &trans &trans &trans &trans &trans &trans
-                &trans &trans &trans &trans &trans &trans           &trans &trans &trans &trans &trans &trans
-                &trans &trans &trans &trans &trans &trans           &trans &trans &trans &trans &trans &trans
-                            &mkp MCLK &mkp LCLK &mkp RCLK           &mkp LCLK &mkp RCLK &mkp MCLK
-            >;
+                default_layer {
+                        display-name = "MAIN";
+                        bindings = <
+//,------------------------------------------------------------------------.      ,-----------------------------------------------------------------------.
+  &kp TAB      &kp Q        &kp W        &kp E        &kp R        &kp T           &kp CH_Z    &kp U        &kp I      &kp O       &kp P        &kp BSPC
+//|-----------+------------+------------+------------+------------+--------|      |-----------+------------+----------+-----------+------------+----------|
+  &mt LCTRL ESC  &kp A        &kp S        &kp D        &kp F        &kp G           &kp H       &kp J        &kp K      &kp L       &kp CH_ODIA  &kp CH_ADIA
+//|-----------+------------+------------+------------+------------+--------|      |-----------+------------+----------+-----------+------------+----------|
+  &kp LSHFT    &kp CH_Y     &kp X        &kp C        &kp V        &kp B           &kp N       &kp M        &kp CH_COMM &kp CH_DOT &kp CH_MINS  &kp RSHIFT
+//|-----------+------------+------------+------------+------------+--------|      |-----------+------------+----------+-----------+------------+----------|
+                                         &kp LGUI     &mo LOWER    &kp RET         &kp SPACE   &mo_sl RAISE OSL &td0
+                                      //`----------------------------------'      `-----------------------------------'
+                        >;
+                };
+                MAC {
+                        display-name = "MAC";
+                        bindings = <
+//,------------------------------------------------------------------------.      ,-----------------------------------------------------------------------.
+  &kp TAB      &kp Q        &kp W        &kp E        &kp R        &kp T           &kp CH_Z    &kp U        &kp I      &kp O       &kp P        &kp BSPC
+//|-----------+------------+------------+------------+------------+--------|      |-----------+------------+----------+-----------+------------+----------|
+  &mt LCTRL ESC &kp A       &kp S        &kp D        &kp F        &kp G           &kp H       &kp J        &kp K      &kp L       &kp CH_ODIA  &kp CH_ADIA
+//|-----------+------------+------------+------------+------------+--------|      |-----------+------------+----------+-----------+------------+----------|
+  &kp LSHFT    &kp CH_Y     &kp X        &kp C        &kp V        &kp B           &kp N       &kp M        &kp CH_COMM &kp CH_DOT &kp CH_MINS  &kp RSHIFT
+//|-----------+------------+------------+------------+------------+--------|      |-----------+------------+----------+-----------+------------+----------|
+                                         &kp HYP_MAC  &mo LOWER    &kp RET         &kp SPACE   &mo_sl MC_RAISE OSL &kp LGUI
+                                      //`----------------------------------'      `-----------------------------------'
+                        >;
+                };
+                lower_layer {
+                        display-name = "LOWER";
+                        bindings = <
+//,------------------------------------------------------------------------.      ,-----------------------------------------------------------------------.
+  &kp ESC      &kp N1       &kp N2       &kp N3       &kp N4       &kp N5          &kp N6      &kp N7       &kp N8     &kp N9      &kp N0       &kp CH_QUOT
+//|-----------+------------+------------+------------+------------+--------|      |-----------+------------+----------+-----------+------------+----------|
+  &kp LCTRL    &kp F1       &kp F2       &kp F3       &kp F4       &kp F5          &kp F6      &kp F7       &kp F8     &kp F9      &kp F10      &kp F11
+//|-----------+------------+------------+------------+------------+--------|      |-----------+------------+----------+-----------+------------+----------|
+  &none        &bt BT_SEL 0 &bt BT_SEL 1 &bt BT_SEL 2 &bt BT_SEL 3 &bt BT_SEL 4    &mkp MCLK   &none        &none      &none       &bt BT_CLR   &kp F12
+//|-----------+------------+------------+------------+------------+--------|      |-----------+------------+----------+-----------+------------+----------|
+                          	             &none        &none        &none           &none       &tog MAC &tog GAME
+                                      //`----------------------------------'      `-----------------------------------'
+                        >;
+                };
+                raise_layer {
+                        display-name = "RAISE";
+                        bindings = <
+//,------------------------------------------------------------------------.      ,-----------------------------------------------------------------------.
+  &kp TILDE    &kp CH_BSLS  &kp CH_SLSH  &kp CH_LPRN  &kp CH_RPRN  &none           &kp PG_UP    &kp HOME     &kp UP      &kp END    &kp CH_UDIA  &kp DEL
+//|-----------+------------+------------+------------+------------+--------|      |-----------+------------+----------+-----------+------------+----------|
+  &kp LCTRL    &kp CH_AT    &kp CH_HASH  &kp CH_LCBR  &kp CH_RCBR  &none           &kp PG_DN    &kp LEFT     &kp DOWN    &kp RIGHT  &kp CH_QUES  &kp CH_EXLM
+//|-----------+------------+------------+------------+------------+--------|      |-----------+-----------+------------+----------+------------+----------|
+  &kp LSHFT    &kp CH_LABK  &kp CH_RABK  &kp CH_LBRC  &kp CH_RBRC  &none           &none        &none        &none       &kp GRAVE  &kp CH_DLR   &none
+//|-----------+------------+------------+------------+------------+--------|      |-----------+------------+----------+-----------+------------+----------|
+                                         &kp LGUI     &kp LALT     &none           &none       &none        &none
+                                      //`----------------------------------'      `-----------------------------------'
+                        >;
+                };
+                raise_mac {
+                        display-name = "MAISE";
+                        bindings = <
+//,------------------------------------------------------------------------.      ,-----------------------------------------------------------------------.
+  &kp TILDE    &kp CH_BSLS  &kp CH_SLSH  &kp CH_LPRN  &kp CH_RPRN  &none           &kp PG_UP    &kp HOME     &kp UP      &kp END    &kp CH_UDIA  &kp DEL
+//|-----------+------------+------------+------------+------------+--------|      |-----------+------------+----------+-----------+------------+----------|
+  &kp LCTRL    &kp MC_AT    &kp CH_HASH  &kp MC_LCBR  &kp MC_RCBR  &none           &kp PG_DN    &kp LEFT     &kp DOWN    &kp RIGHT  &kp CH_QUES  &kp CH_EXLM
+//|-----------+------------+------------+------------+------------+--------|      |-----------+-----------+------------+----------+------------+----------|
+  &kp LSHFT    &kp MC_LABK  &kp MC_RABK  &kp MC_LBRC  &kp MC_RBRC  &none           &none        &none        &none       &kp GRAVE  &kp CH_DLR   &none
+//|-----------+------------+------------+------------+------------+--------|      |-----------+------------+----------+-----------+------------+----------|
+                                         &kp HYP_MAC  &kp LALT     &none           &none       &none        &none
+                                      //`----------------------------------'      `-----------------------------------'
+                        >;
+                };
+                OSL {
+                        display-name = "OSL";
+                        bindings = <
+//,------------------------------------------------------------------------.      ,-----------------------------------------------------------------------.
+  &none        &kp CH_PLUS  &kp CH_DQUO  &kp CH_ASTR  &kp CH_CCED  &kp CH_PERC     &kp CH_AMPR &kp CH_SLSH  &kp CH_LPRN &kp CH_RPRN &kp CH_EQL   &kp CH_QUOT
+//|-----------+------------+------------+------------+------------+--------|      |-----------+------------+----------+-----------+------------+----------|
+  &none        &kp CH_BRKP  &kp CH_AT    &kp CH_EURO  &none        &none           &none       &kp CH_PIPE &none        &none       &kp CH_DLR   &kp CH_GRV
+//|-----------+------------+------------+------------+------------+--------|      |-----------+------------+----------+-----------+------------+----------|
+  &none        &none        &none        &none        &none        &none           &none       &none         &none      &none       &kp CH_DLR   &kp CH_TILD
+//|-----------+------------+------------+------------+------------+--------|      |-----------+------------+----------+-----------+------------+----------|
+                                         &none        &none        &none           &none       &none         &none
+                                      //`----------------------------------'      `-----------------------------------'
+                        >;
+                };
+                GAME {
+                        display-name = "GAME";
+                        bindings = <
+//,------------------------------------------------------------------------.      ,-----------------------------------------------------------------------.
+  &kp TAB      &kp N2       &kp Q        &kp W        &kp E        &kp R           &kp N5      &kp N6       &kp N7     &kp N8      &kp N9       &kp N0
+//|-----------+------------+------------+------------+------------+--------|      |-----------+------------+----------+-----------+------------+----------|
+  &kp B        &kp N1       &kp A        &kp S        &kp D        &kp F           &kp H       &kp J        &kp K      &kp L       &none        &none
+//|-----------+------------+------------+------------+------------+--------|      |-----------+------------+----------+-----------+------------+----------|
+  &kp LSHFT    &kp LCTRL    &mt G Y      &kp X        &kp C        &kp V           &none       &none        &none      &none       &none        &none
+//|-----------+------------+------------+------------+------------+--------|      |-----------+------------+----------+-----------+------------+----------|
+                                         &kp N3       &kp N4       &kp SPACE       &kp ESC     &none        &tog GAME
+                                      //`----------------------------------'      `-----------------------------------'
+                        >;
+                };
         };
-
-        extra_2 {
-                status = "reserved";
-        };
-
-        extra_3 {
-                status = "reserved";
-        };
-    };
 };
