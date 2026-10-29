@@ -19,6 +19,18 @@
 };
 
 / {
+        macros {
+                // Parameters: Bluetooth profile (zero-based), target base layer.
+                bt_layer: bt_layer {
+                        compatible = "zmk,behavior-macro-two-param";
+                        #binding-cells = <2>;
+                        wait-ms = <0>;
+                        tap-ms = <0>;
+                        bindings = <&macro_param_1to2>, <&bt BT_SEL MACRO_PLACEHOLDER>,
+                                   <&macro_param_2to1>, <&to MACRO_PLACEHOLDER>;
+                };
+        };
+
         behaviors {
           mo_sl: behavior_mo_sl {
               compatible = "zmk,behavior-hold-tap";
@@ -84,7 +96,8 @@
 //|-----------+------------+------------+------------+------------+--------|      |-----------+------------+----------+-----------+------------+----------|
   &kp LCTRL    &kp F1       &kp F2       &kp F3       &kp F4       &kp F5          &kp F6      &kp F7       &kp F8     &kp F9      &kp F10      &kp F11
 //|-----------+------------+------------+------------+------------+--------|      |-----------+------------+----------+-----------+------------+----------|
-  &none        &bt BT_SEL 0 &bt BT_SEL 1 &bt BT_SEL 2 &bt BT_SEL 3 &bt BT_SEL 4    &mkp LCLK   &mkp MCLK    &mkp RCLK  &none       &bt BT_CLR   &kp F12
+// Bluetooth slots 1-5: slot 3 (profile 2) uses MAC; the others use MAIN.
+  &none &bt_layer 0 DEFAULT &bt_layer 1 DEFAULT &bt_layer 2 MAC &bt_layer 3 DEFAULT &bt_layer 4 DEFAULT    &mkp LCLK   &mkp MCLK    &mkp RCLK  &none       &bt BT_CLR   &kp F12
 //|-----------+------------+------------+------------+------------+--------|      |-----------+------------+----------+-----------+------------+----------|
                           	             &none        &none        &none           &mkp LCLK   &tog MAC &tog GAME
                                       //`----------------------------------'      `-----------------------------------'
